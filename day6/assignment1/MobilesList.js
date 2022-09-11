@@ -80,4 +80,5 @@ let MobilesList = [
         }]
     },
 ];
+
 export {MobilesList}
