@@ -6,7 +6,7 @@ MongoClient.connect(URL, (error, myMongoClient)=>{
         console.log('Connection Fail')
     }else {
         console.log('Connection Success');
-        // insertData(myMongoClient)
+        insertData(myMongoClient)
         // deleteOne(myMongoClient)
         // deleteAll(myMongoClient)
         // findOne(myMongoClient)
@@ -14,73 +14,28 @@ MongoClient.connect(URL, (error, myMongoClient)=>{
         // findAllDataByProjection(myMongoClient)
         // findAllDataByQuery(myMongoClient)
         // findDataByLimit(myMongoClient)
-        findDataBySort(myMongoClient)
+        // findDataBySort(myMongoClient)
+        // update(myMongoClient)
+        // createCollection(myMongoClient)
+        // deleteCollection(myMongoClient)
     }
 })
-
-
-
 
 
 function insertData(myMongoClient){
     const blogDB = myMongoClient.db('blog');
     const postsCollection = blogDB.collection('posts');
-    //
-    // const postData =
-    //     {
-    //         title: "Post 4",
-    //         body: "body of post 4",
-    //         category: "Mobile",
-    //         view: "60",
-    //         tags: ['samsung', 'samphony'],
-    //         date: Date()
-    //     };
+    const postData =
+        {
+            title: "Post 7",
+            body: "body of post 7",
+            category: "Mobile",
+            view: "30",
+            tags: ['samsung', 'symphony'],
+            date: Date()
+        };
 
-    const postData = [
-    {
-        title: "Post 1",
-        body: "body of post 1",
-        category: "Mobile",
-        view: "60",
-        tags: ['samsung', 'samphony'],
-        date: Date()
-    },
-    {
-        title: "Post 2",
-        body: "body of post 2",
-        category: "Mobile",
-        view: "60",
-        tags: ['samsung', 'samphony'],
-        date: Date()
-    },
-    {
-        title: "Post 3",
-        body: "body of post 3",
-        category: "Mobile",
-        view: "60",
-        tags: ['samsung', 'samphony'],
-        date: Date()
-    },
-    {
-        title: "Post 4",
-        body: "body of post 4",
-        category: "Mobile",
-        view: "60",
-        tags: ['samsung', 'samphony'],
-        date: Date()
-    },
-    {
-        title: "Post 5",
-        body: "body of post 5",
-        category: "Mobile",
-        view: "60",
-        tags: ['samsung', 'samphony'],
-        date: Date()
-    }
-];
-
-
-    postsCollection.insertMany(postData, (error)=>{
+    postsCollection.insertOne(postData, (error)=>{
         if (error){
             console.log('Data insert fail')
         }else {
@@ -204,6 +159,47 @@ function findDataBySort(myMongoClient) {
     })
 }
 
+function update(myMongoClient) {
+    const blogDB = myMongoClient.db('blog');
+    const posts = blogDB.collection('posts');
+
+    const query = {title: 'Post 3'};
+    const newData = {$set: {body: 'body of post 3', category: 'Laptop', view: '10'}}
+    posts.updateOne(query, newData, (error, result)=>{
+        if (error){
+            console.log('Data update fail')
+        }else {
+            console.log(result)
+        }
+    });
+}
 
 
+
+
+
+
+function createCollection(myMongoClient) {
+    const blogDB = myMongoClient.db('blog')
+
+    blogDB.createCollection('category', (error, result)=>{
+        if (error){
+            console.log('Collection not create')
+        }else {
+            console.log(result)
+        }
+    });
+}
+
+
+function deleteCollection(myMongoClient) {
+    const blogDB = myMongoClient.db('blog');
+    blogDB.dropCollection('category', (error, result)=>{
+        if (error){
+            console.log('Collection not delete')
+        }else {
+            console.log(result)
+        }
+    })
+}
 
