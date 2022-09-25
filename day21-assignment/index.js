@@ -14,7 +14,12 @@ MongoClient.connect(URL, config, (error,MyMongoClient )=>{
         // findAllDataByQuery(MyMongoClient);
         // findAllDataByProjection(MyMongoClient);
         // findAllDataByLimit(MyMongoClient);
-        findAllDataBySort(MyMongoClient);
+        // findAllDataBySort(MyMongoClient);
+        // update(MyMongoClient);
+        // deleteOneItem(MyMongoClient);
+        // deleteAllItem(MyMongoClient);
+        // createCollection(MyMongoClient);
+        // deleteCollection(MyMongoClient);
     }
 })
 
@@ -178,7 +183,7 @@ function findOneItemWithoutCondition(MyMongoClient){
 function findOneItemWithCondition(MyMongoClient){
     const productsCollection = DBConnection(MyMongoClient);
 
-    const findObj = {"general.brand": "Canon"};
+    const findObj = {"general.brand": "Canon", 'general.modelNo': 'EOS 200D II'};
     productsCollection.findOne(findObj, (error, data)=>{
         if (error){
             console.log('Data not found')
@@ -251,3 +256,82 @@ function findAllDataBySort(MyMongoClient){
         }
     })
 }
+/**
+ * Update Data
+ */
+function update(MyMongoClient){
+    const productsCollection = DBConnection(MyMongoClient);
+
+    const query = {'general.brand': 'Canon', 'general.modelNo': '1500D'};
+    const updateValues = {$set: {specialPrice: '34,000', warranty: '3 Year Warranty'}};
+
+    productsCollection.updateOne(query, updateValues, (error, result)=>{
+        if (error){
+            console.log('Update Fail')
+        }else {
+            console.log(result)
+        }
+    })
+}
+
+/**
+ * Delete One Item Data
+ */
+function deleteOneItem(MyMongoClient){
+    const productsCollection = DBConnection(MyMongoClient);
+
+    const query = {'general.brand': 'Canon', 'general.modelNo': 'EOS 200D II'}
+
+    productsCollection.deleteOne(query, (error, result)=>{
+        if (error){
+            console.log('Data Delete Fail')
+        }else {
+            console.log(`${result.deletedCount} Data deleted`)
+        }
+    })
+}
+/**
+ * Delete All Item
+ */
+function deleteAllItem(MyMongoClient){
+    const productsCollection = DBConnection(MyMongoClient);
+
+    productsCollection.deleteMany((error, resultObj)=>{
+        if (error){
+            console.log('Data Delete Fail')
+        }else {
+            console.log(`Total deleted data: ${resultObj.deletedCount}`);
+        }
+    })
+}
+
+/**
+ * Create Collection
+ */
+function createCollection(MyMongoClient){
+    const DB = MyMongoClient.db('shop');
+
+    DB.createCollection('brands', (error, result)=>{
+        if (error){
+            console.log('Collection Create Fail')
+        }else {
+            console.log(result)
+        }
+    })
+}
+
+/**
+ * Delete Collection
+ */
+function deleteCollection(MyMongoClient){
+    const DB = MyMongoClient.db('shop');
+
+    DB.dropCollection('brands', (error, result)=>{
+        if (error){
+            console.log('Collection Delete Fail')
+        }else {
+            console.log(result)
+        }
+    })
+}
+
